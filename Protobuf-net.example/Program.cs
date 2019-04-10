@@ -1,15 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Protobuf_net.example
 {
-    class Program
+    internal class Program
     {
         static void Main(string[] args)
         {
+            var userInfo = new UserInfo
+            {
+                ID = 1,
+                Email = "max.chou.test@gmail.com",
+                RegisterTtime = DateTime.Now,
+                Username = "max"
+            };
+
+            using (var file = File.Create("userinfo.bin"))
+            {
+                ProtoBuf.Serializer.Serialize(file, userInfo);
+            }
+
+            UserInfo userInfoFromFile;
+            using (var file = File.OpenRead("userinfo.bin"))
+            {
+                userInfoFromFile = ProtoBuf.Serializer.Deserialize<UserInfo>(file);
+            }
+            Console.WriteLine(userInfoFromFile.Username);
         }
     }
 }
