@@ -3,10 +3,23 @@ using ProtoBuf;
 
 namespace Protobuf_net.example
 {
-    [ProtoContract] // must declare the [ProtoContract], can not inherit it.
+    // must declare the [ProtoContract], can not inherit it.
+    [ProtoContract(SkipConstructor = true)] 
     [ProtoInclude(6, typeof(Address))] // the number have to above than "UserInfo" maximum number.
     public class UserInfo
     {
+        public UserInfo(string userName)
+        {
+            this.Username = userName;
+        }
+
+        [ProtoAfterSerialization]
+        void Validate()
+        {
+            if (string.IsNullOrEmpty(this.Username))
+                throw new Exception("The 'Username' is empty.");
+        }
+
         [ProtoMember(1)] // must declare the [ProtoMember(number)]
         public int ID { get; set; }
 
