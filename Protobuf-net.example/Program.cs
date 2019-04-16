@@ -13,7 +13,7 @@ namespace Protobuf_net.example
                 ID = 1,
                 Email = "max.chou.test@gmail.com",
                 RegisterTime = DateTime.Now,
-                Address = new Address { Line1 = "Taipei", Line2 = "Taiwan"}
+                Address = new Address { Line1 = "Taipei", Line2 = "Taiwan" }
             };
 
             using (var file = File.Create("userinfo.bin"))
@@ -27,7 +27,7 @@ namespace Protobuf_net.example
                 userInfoFromFile = ProtoBuf.Serializer.Deserialize<UserInfo>(file);
             }
             Console.WriteLine($"Read Protobuf content from file: Username:{ userInfoFromFile.Username }");
-            
+
             //2. Try to use [ProtoAfterSerialization] with Validate()
             var emptyUserName = new UserInfo("");
             using (var file = File.Create("emptyUserName.bin"))
@@ -54,6 +54,13 @@ namespace Protobuf_net.example
             var userInfoObjFromText = ProtobufSerializer.DeSerializeFromText<UserInfo>(protobufVal);
 
             Console.WriteLine($"Read Protobuf content from plain text: Username:{ userInfoObjFromText.Username }");
+
+
+            //4. Use Protobuf with Redis
+            var redisHelper = new RedisHelper("localhost");
+            var inputKey = "protobuf_context_" + DateTime.Now.ToString("G");
+            redisHelper.Set(inputKey, 2, "test values");
+
             Console.Read();
         }
     }
