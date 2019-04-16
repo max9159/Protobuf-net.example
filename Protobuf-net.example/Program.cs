@@ -57,10 +57,21 @@ namespace Protobuf_net.example
 
 
             //4. Use Protobuf with Redis
-            var redisHelper = new RedisHelper("localhost");
+            var redisHelper = new RedisHelper("localhost", 2);
             var inputKey = "protobuf_context_" + DateTime.Now.ToString("G");
-            redisHelper.Set(inputKey, 2, "test values");
 
+            var userInfoForRedis = new UserInfo("test_Redis")
+            {
+                ID = 987,
+                Email = "test.redis@gmail.com",
+                RegisterTime = DateTime.Now,
+                Address = new Address { Line1 = "Taipei", Line2 = "Taiwan" },
+                Remark = "Remark"
+            };
+            redisHelper.Set(inputKey, userInfoForRedis);
+            var userInfoFromRedis = redisHelper.Get<UserInfo>(inputKey);
+
+            Console.WriteLine($"Read Protobuf content from Redis: Username:{ userInfoFromRedis.Username }");
             Console.Read();
         }
     }
